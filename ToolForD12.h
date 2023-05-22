@@ -1,0 +1,76 @@
+#pragma once
+#include <Windows.h>
+#include <wrl.h>
+#include <dxgi1_5.h>
+#include <d3d12.h>
+#include"d3dx12.h"
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
+#include <string>
+#include <memory>
+#include <algorithm>
+#include <vector>
+#include <array>
+#include <unordered_map>
+#include <cstdint>
+#include <fstream>
+#include <sstream>
+#include <windowsx.h>
+#include <comdef.h>
+
+
+
+class ToolForD12
+{
+public:
+
+    static UINT calcConstBufferByteSize(UINT byteSize)
+    {
+        //round up to nearest multiple of 256
+        return (byteSize + 255) & ~255;
+    }
+
+    //static Microsoft::WRL::ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
+
+
+    static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
+        const std::wstring& filename,
+        const D3D_SHADER_MACRO* defines,
+        const std::string& entrypoint,
+        const std::string& target);
+};
+
+
+class DxException
+{
+public:
+    DxException() = default;
+    DxException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber);
+
+    std::wstring ToString()const;
+
+    HRESULT ErrorCode = S_OK;
+    std::wstring FunctionName;
+    std::wstring Filename;
+    int LineNumber = -1;
+};
+
+
+inline std::wstring AnsiToWString(const std::string& str)
+{
+    WCHAR buffer[512];
+    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, buffer, 512);
+    return std::wstring(buffer);
+}
+
+#ifndef ThrowIfFailed
+#define ThrowIfFailed(x)                                              \
+{                                                                     \
+    HRESULT hr__ = (x);                                               \
+    std::wstring wfn = AnsiToWString(__FILE__);                       \
+    if(FAILED(hr__)) { throw DxException(hr__, L#x, wfn, __LINE__); } \
+}
+#endif
