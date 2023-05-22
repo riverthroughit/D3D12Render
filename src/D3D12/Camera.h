@@ -1,5 +1,5 @@
 #pragma once
-#include "MyMath.h"
+#include "D3D12/tools/MyMath.h"
 #include<utility>
 
 class Camera

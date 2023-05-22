@@ -495,8 +495,8 @@ void D3D12Render::createRootSignature() {
 void D3D12Render::createShadersAndInputLayout()
 {
 
-    mvsByteCode = ToolForD12::CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_0");
-    mpsByteCode = ToolForD12::CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_0");
+    mvsByteCode = ToolForD12::CompileShader(L"src/Shaders/color.hlsl", nullptr, "VS", "vs_5_0");
+    mpsByteCode = ToolForD12::CompileShader(L"src/Shaders/color.hlsl", nullptr, "PS", "ps_5_0");
 
     mInputLayout =
     {

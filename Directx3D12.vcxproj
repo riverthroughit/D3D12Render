@@ -58,6 +58,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -83,31 +88,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="D3D12Render.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="MeshGeometry.cpp" />
-    <ClCompile Include="ObjectConsts.cpp" />
-    <ClCompile Include="ToolForD12.cpp" />
-    <ClCompile Include="UploadBuffer.cpp" />
-    <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="src\D3D12\Camera.cpp" />
+    <ClCompile Include="src\D3D12\D3D12App.cpp" />
+    <ClCompile Include="src\D3D12\D3D12Render.cpp" />
+    <ClCompile Include="src\D3D12\MeshGeometry.cpp" />
+    <ClCompile Include="src\D3D12\ObjectConsts.cpp" />
+    <ClCompile Include="src\D3D12\tools\GameTimer.cpp" />
+    <ClCompile Include="src\D3D12\tools\ToolForD12.cpp" />
+    <ClCompile Include="src\D3D12\UploadBuffer.cpp" />
+    <ClCompile Include="src\D3D12\Vertex.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <QtRcc Include="D3D12App.qrc" />
     <QtUic Include="D3D12App.ui" />
-    <QtMoc Include="D3D12App.h" />
-    <ClCompile Include="D3D12App.cpp" />
-    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="D3D12Render.h" />
-    <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="GameTimer.h" />
-    <ClInclude Include="MeshGeometry.h" />
-    <ClInclude Include="MyMath.h" />
-    <ClInclude Include="ObjectConsts.h" />
-    <ClInclude Include="ToolForD12.h" />
-    <ClInclude Include="UploadBuffer.h" />
-    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="src\D3D12\Camera.h" />
+    <QtMoc Include="src\D3D12\D3D12App.h" />
+    <ClInclude Include="src\D3D12\D3D12Render.h" />
+    <ClInclude Include="src\D3D12\MeshGeometry.h" />
+    <ClInclude Include="src\D3D12\ObjectConsts.h" />
+    <ClInclude Include="src\D3D12\tools\d3dx12.h" />
+    <ClInclude Include="src\D3D12\tools\GameTimer.h" />
+    <ClInclude Include="src\D3D12\tools\MyMath.h" />
+    <ClInclude Include="src\D3D12\tools\ToolForD12.h" />
+    <ClInclude Include="src\D3D12\UploadBuffer.h" />
+    <ClInclude Include="src\D3D12\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
