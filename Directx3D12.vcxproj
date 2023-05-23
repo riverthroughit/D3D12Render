@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="D3D12MemoryAllocator.cpp" />
+    <ClCompile Include="D3D12Resource.cpp" />
     <ClCompile Include="src\D3D12\Camera.cpp" />
     <ClCompile Include="src\D3D12\D3D12App.cpp" />
     <ClCompile Include="src\D3D12\D3D12Render.cpp" />
@@ -102,6 +104,8 @@
     <QtUic Include="D3D12App.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="D3D12MemoryAllocator.h" />
+    <ClInclude Include="D3D12Resource.h" />
     <ClInclude Include="src\D3D12\Camera.h" />
     <QtMoc Include="src\D3D12\D3D12App.h" />
     <ClInclude Include="src\D3D12\D3D12Render.h" />

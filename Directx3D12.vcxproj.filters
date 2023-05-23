@@ -63,6 +63,12 @@
     <ClCompile Include="src\D3D12\Vertex.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
+    <ClCompile Include="D3D12Resource.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12MemoryAllocator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\D3D12\tools\d3dx12.h">
@@ -95,6 +101,10 @@
     <ClInclude Include="src\D3D12\Vertex.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
+    <ClInclude Include="D3D12Resource.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D12MemoryAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\D3D12\D3D12App.h">
