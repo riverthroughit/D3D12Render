@@ -21,16 +21,16 @@
 #include <windowsx.h>
 #include <comdef.h>
 
-
+#define CONSTS_ALIGNMENT 256
 
 class ToolForD12
 {
 public:
 
-    static UINT calcConstBufferByteSize(UINT byteSize)
+    static uint32_t AlignArbitrary(uint32_t byteSize, uint32_t Alignment)
     {
-        //round up to nearest multiple of 256
-        return (byteSize + 255) & ~255;
+        //round up to nearest multiple of Alignment
+        return (byteSize + Alignment) & ~Alignment;
     }
 
     //static Microsoft::WRL::ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);

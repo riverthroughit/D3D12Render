@@ -3,7 +3,7 @@
 
 class D3D12BuddyAllocator;
 
-//封装显存
+//封装显存资源
 class D3D12Resource
 {
 public:
@@ -22,7 +22,7 @@ public:
 	void* MappedBaseAddress = nullptr;
 };
 
-//每个buddy显存块的信息
+//
 struct D3D12BuddyBlockData
 {
 	uint32_t Offset = 0;
@@ -39,18 +39,10 @@ public:
 	enum class ResourceLocationType
 	{
 		Undefined,
-		StandAlone,
-		SubAllocation,
+		StandAlone,//CommittedResource创建显存并只用于一个D3D12Resource
+		SubAllocation,//PlacedResource或ManualSubAllocation
 	};
 
-public:
-	D3D12ResourceLocation();
-
-	~D3D12ResourceLocation();
-
-	void ReleaseResource();
-
-	void SetType(ResourceLocationType Type) { resourceLocationType = Type; }
 
 public:
 	ResourceLocationType resourceLocationType = ResourceLocationType::Undefined;
@@ -65,8 +57,8 @@ public:
 
 	union
 	{
-		uint64_t OffsetFromBaseOfResource;
-		uint64_t OffsetFromBaseOfHeap;
+		uint64_t OffsetFromBaseOfResource;//PlacedResource
+		uint64_t OffsetFromBaseOfHeap;//ManualSubAllocation
 	};
 
 
@@ -74,5 +66,15 @@ public:
 
 	// About mapping, for upload buffer
 	void* MappedAddress = nullptr;
+
+
+public:
+	D3D12ResourceLocation() = default;
+
+	~D3D12ResourceLocation();
+
+	void ReleaseResource();
+
+	void SetType(ResourceLocationType Type) { resourceLocationType = Type; }
 };
 

@@ -67,7 +67,7 @@
       <Filter>src\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="D3D12MemoryAllocator.cpp">
-      <Filter>src</Filter>
+      <Filter>src\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +104,9 @@
     <ClInclude Include="D3D12Resource.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="D3D12MemoryAllocator.h" />
+    <ClInclude Include="D3D12MemoryAllocator.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\D3D12\D3D12App.h">

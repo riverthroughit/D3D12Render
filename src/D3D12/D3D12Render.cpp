@@ -361,7 +361,7 @@ void D3D12Render::createCbvDescriptor() {
     //创建管理常量缓冲区的对象 并用unique指针指向它
     mObjectCB = std::make_unique<UploadBuffer<ObjectConsts>>(md3dDevice.Get(), 1, true);
     //常量缓冲区中单个对象地大小
-    UINT objConstByteSize = ToolForD12::calcConstBufferByteSize(sizeof(ObjectConsts));
+    UINT objConstByteSize = ToolForD12::AlignArbitrary(sizeof(ObjectConsts), CONSTS_ALIGNMENT);
 
     //描述常量缓冲区资源
     D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
