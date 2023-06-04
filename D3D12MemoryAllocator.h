@@ -2,7 +2,7 @@
 #include "D3D12Resource.h"
 #include<set>
 
-//也许可放入cpp文件
+
 #define DEFAULT_POOL_SIZE (512 * 1024 * 512)
 
 #define DEFAULT_RESOURCE_ALIGNMENT 4
@@ -30,16 +30,16 @@ public:
 	};
 
 
-	private:
+private:
 	AllocatorInitData InitData;
 
-	const uint32_t MinBlockSize = 256;
+	const uint32_t MinBlockSize = 256;//页的大小
 
 	uint32_t MaxOrder;//最大阶数
 
 	uint32_t TotalAllocSize = 0;
 
-	std::vector<std::set<uint32_t>> FreeBlocks;
+	std::vector<std::set<uint32_t>> FreeBlocks;//索引为阶数 元素为对应阶数的块的首地址组成的set集合
 
 	std::vector<D3D12BuddyBlockData> DeferredDeletionQueue;
 
@@ -69,26 +69,27 @@ private:
 
 	uint32_t AllocateBlock(uint32_t Order);
 
-	//没懂 
+	//确保分配的显存在偏移量填充后足够 
 	uint32_t GetSizeToAllocate(uint32_t Size, uint32_t Alignment);
 
 	bool CanAllocate(uint32_t SizeToAllocate);
 
-	//根据显存Size大小计算显存块的数量
+	//根据显存Size大小计算页的数量
 	uint32_t SizeToUnitSize(uint32_t Size) const
 	{
 		return (Size + (MinBlockSize - 1)) / MinBlockSize;
 	}
 
-	//根据显存块的数量计算阶数
+	//根据页的数量计算阶数
 	uint32_t UnitSizeToOrder(uint32_t Size) const
 	{
 		unsigned long Result;
+		//从高位到低位 获取第一个1的位数 0011010 -> 0010000
 		_BitScanReverse(&Result, Size + Size - 1); // ceil(log2(size))
 		return Result;
 	}
 
-	//根据阶数计算显存块的数量
+	//根据阶数计算页的数量
 	uint32_t OrderToUnitSize(uint32_t Order) const
 	{
 		return ((uint32_t)1) << Order;

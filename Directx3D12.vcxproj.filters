@@ -69,6 +69,12 @@
     <ClCompile Include="D3D12MemoryAllocator.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
+    <ClCompile Include="D3D12HeapSlotAllocator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D12DescriptorCache.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\D3D12\tools\d3dx12.h">
@@ -107,6 +113,8 @@
     <ClInclude Include="D3D12MemoryAllocator.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
+    <ClInclude Include="D3D12HeapSlotAllocator.h" />
+    <ClInclude Include="D3D12DescriptorCache.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\D3D12\D3D12App.h">

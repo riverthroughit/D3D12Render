@@ -97,7 +97,7 @@ bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12
 		// Allocate block
 		const uint32_t UnitSize = SizeToUnitSize(SizeToAllocate);
 		const uint32_t Order = UnitSizeToOrder(UnitSize);
-		const uint32_t Offset = AllocateBlock(Order); // This is the offset in MinBlockSize units
+		const uint32_t Offset = AllocateBlock(Order); //页为单位的偏移量 This is the offset in MinBlockSize units
 		const uint32_t AllocSize = UnitSize * MinBlockSize;
 		TotalAllocSize += AllocSize;
 
@@ -106,6 +106,7 @@ bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12
 		uint32_t AlignedOffsetFromResourceBase = OffsetFromBaseOfResource;
 		if (Alignment != 0 && OffsetFromBaseOfResource % Alignment != 0)
 		{
+			//首地址偏移到对齐处
 			AlignedOffsetFromResourceBase = ToolForD12::AlignArbitrary(OffsetFromBaseOfResource, Alignment);
 
 			uint32_t Padding = AlignedOffsetFromResourceBase - OffsetFromBaseOfResource;

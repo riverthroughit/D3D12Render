@@ -30,7 +30,7 @@ public:
     static uint32_t AlignArbitrary(uint32_t byteSize, uint32_t Alignment)
     {
         //round up to nearest multiple of Alignment
-        return (byteSize + Alignment) & ~Alignment;
+        return (byteSize + (Alignment - 1)) & ~(Alignment - 1);
     }
 
     //static Microsoft::WRL::ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
@@ -74,3 +74,15 @@ inline std::wstring AnsiToWString(const std::string& str)
     if(FAILED(hr__)) { throw DxException(hr__, L#x, wfn, __LINE__); } \
 }
 #endif
+
+
+template<UINT TNameLength>
+inline void SetDebugName(_In_ ID3D12DeviceChild* resource, _In_z_ const wchar_t(&name)[TNameLength]) noexcept
+{
+#if !defined(NO_D3D12_DEBUG_NAME) && (defined(_DEBUG) || defined(PROFILE))
+    resource->SetName(name);
+#else
+    UNREFERENCED_PARAMETER(resource);
+    UNREFERENCED_PARAMETER(name);
+#endif
+}

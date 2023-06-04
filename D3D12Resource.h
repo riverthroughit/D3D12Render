@@ -49,10 +49,9 @@ public:
 
 	// SubAllocation ÷∏œÚœ‘¥Ê∑÷≈‰∆˜
 	D3D12BuddyAllocator* Allocator = nullptr;
-
 	D3D12BuddyBlockData BlockData;
 
-	// StandAlone resource 
+	
 	D3D12Resource* UnderlyingResource = nullptr;
 
 	union
