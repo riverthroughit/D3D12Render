@@ -1,4 +1,5 @@
 #include "D3D12DescriptorCache.h"
+#include "D3D12Device.h"
 
 D3D12DescriptorCache::D3D12DescriptorCache(D3D12Device* InDevice)
 	:Device(InDevice)

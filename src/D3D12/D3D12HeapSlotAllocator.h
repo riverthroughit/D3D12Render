@@ -1,6 +1,6 @@
 #pragma once
 
-#include"D3D12/tools/ToolForD12.h"
+#include"ToolForD12.h"
 #include<list>
 
 class D3D12HeapSlotAllocator

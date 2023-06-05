@@ -1,5 +1,5 @@
 #pragma once
-#include"D3D12/tools/MyMath.h"
+#include"Math/MyMath.h"
 
 struct ObjectConsts
 {

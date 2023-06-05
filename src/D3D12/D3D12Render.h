@@ -4,10 +4,10 @@
 #include <crtdbg.h>
 #endif
 
-#include "D3D12/tools/ToolForD12.h"
-#include"D3D12/tools/GameTimer.h"
+#include "ToolForD12.h"
+#include"Utils/GameTimer.h"
 #include"MeshGeometry.h"
-#include"D3D12/tools/MyMath.h"
+#include"Math/MyMath.h"
 #include"Camera.h"
 
 #include"ObjectConsts.h"

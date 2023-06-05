@@ -21,6 +21,9 @@
 #include <windowsx.h>
 #include <comdef.h>
 
+#include "Utils/FormatConvert.h"
+#include "Math/MyMath.h"
+
 #define CONSTS_ALIGNMENT 256
 
 class ToolForD12

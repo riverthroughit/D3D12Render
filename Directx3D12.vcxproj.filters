@@ -20,8 +20,20 @@
     <Filter Include="src\D3D12">
       <UniqueIdentifier>{0a0fa036-67e4-4a77-b2e8-6f03ca1ec16f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\D3D12\tools">
-      <UniqueIdentifier>{a37e9276-55f8-4290-827d-12cf71d0035d}</UniqueIdentifier>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{b17a5eaa-c60d-48b7-8cd7-4aeea265a7f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Math">
+      <UniqueIdentifier>{cbec9783-e4ee-41c2-94b9-62471fcb84b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Texture">
+      <UniqueIdentifier>{6d4cb693-6050-4e44-92da-090521fd20f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TextureLoader">
+      <UniqueIdentifier>{68455599-1f19-4ab8-b78a-1a9170c61b35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\File">
+      <UniqueIdentifier>{4e87d93b-d95f-42b9-85c5-425c6692129c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,12 +45,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\D3D12\tools\GameTimer.cpp">
-      <Filter>src\D3D12\tools</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D12\tools\ToolForD12.cpp">
-      <Filter>src\D3D12\tools</Filter>
-    </ClCompile>
     <ClCompile Include="src\D3D12\Camera.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
@@ -63,32 +69,74 @@
     <ClCompile Include="src\D3D12\Vertex.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="D3D12Resource.cpp">
+    <ClCompile Include="src\D3D12\D3D12DescriptorCache.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="D3D12MemoryAllocator.cpp">
+    <ClCompile Include="src\D3D12\D3D12HeapSlotAllocator.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="D3D12HeapSlotAllocator.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\D3D12\D3D12MemoryAllocator.cpp">
+      <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="D3D12DescriptorCache.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\D3D12\D3D12Resource.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12CommandContext.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12Device.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12RHI.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12Buffer.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12Texture.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12Viewport.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\ToolForD12.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\GameTimer.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12View.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\MyMath.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Transform.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureRepository.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureLoader\DDSTextureLoader.cpp">
+      <Filter>src\TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureLoader\HDRTextureLoader.cpp">
+      <Filter>src\TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureLoader\WICTextureLoader.cpp">
+      <Filter>src\TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\BinaryReader.cpp">
+      <Filter>src\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\BinarySaver.cpp">
+      <Filter>src\File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\D3D12\tools\d3dx12.h">
-      <Filter>src\D3D12\tools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D12\tools\GameTimer.h">
-      <Filter>src\D3D12\tools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D12\tools\MyMath.h">
-      <Filter>src\D3D12\tools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D12\tools\ToolForD12.h">
-      <Filter>src\D3D12\tools</Filter>
-    </ClInclude>
     <ClInclude Include="src\D3D12\Camera.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
@@ -107,14 +155,114 @@
     <ClInclude Include="src\D3D12\Vertex.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="D3D12Resource.h">
+    <ClInclude Include="src\D3D12\D3D12DescriptorCache.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="D3D12MemoryAllocator.h">
+    <ClInclude Include="src\D3D12\D3D12HeapSlotAllocator.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="D3D12HeapSlotAllocator.h" />
-    <ClInclude Include="D3D12DescriptorCache.h" />
+    <ClInclude Include="src\D3D12\D3D12MemoryAllocator.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Resource.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12CommandContext.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Device.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12RHI.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Buffer.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Texture.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Viewport.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\ToolForD12.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\d3dx12.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\MyMath.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\GameTimer.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12View.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\IntPoint.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Matrix.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Transform.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector2.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector3.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vector4.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture\Texture.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture\TextureInfo.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture\TextureRepository.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\DDS.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\DDSTextureLoader.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\HDRTextureLoader.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\LoaderHelpers.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\stb_image.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader\WICTextureLoader.h">
+      <Filter>src\TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\FormatConvert.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\Logger.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\BinaryReader.h">
+      <Filter>src\File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\BinarySaver.h">
+      <Filter>src\File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\FileHelpers.h">
+      <Filter>src\File</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\PlatformHelpers.h">
+      <Filter>src\File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\D3D12\D3D12App.h">
