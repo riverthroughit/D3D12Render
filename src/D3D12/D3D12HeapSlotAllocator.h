@@ -1,7 +1,7 @@
 #pragma once
 
-#include"ToolForD12.h"
-#include<list>
+#include "D3D12Utils.h"
+#include <list>
 
 class D3D12HeapSlotAllocator
 {
@@ -11,13 +11,13 @@ public:
 
 	struct HeapSlot
 	{
-		uint32_t HeapIndex;//index in HeapMap
+		uint32_t HeapIndex;
 		D3D12_CPU_DESCRIPTOR_HANDLE Handle;
 	};
 
 private:
-	struct FreeRange
-	{
+	struct FreeRange 
+	{ 
 		DescriptorHandleRaw Start;
 		DescriptorHandleRaw End;
 	};
@@ -29,15 +29,6 @@ private:
 
 		HeapEntry() { }
 	};
-
-private:
-	ID3D12Device* D3DDevice;
-
-	const D3D12_DESCRIPTOR_HEAP_DESC HeapDesc;
-
-	const uint32_t DescriptorSize;
-
-	std::vector<HeapEntry> HeapMap;
 
 public:
 	D3D12HeapSlotAllocator(ID3D12Device* InDevice, D3D12_DESCRIPTOR_HEAP_TYPE Type, uint32_t NumDescriptorsPerHeap);
@@ -53,5 +44,12 @@ private:
 
 	void AllocateHeap();
 
-};
+private:
+	ID3D12Device* D3DDevice;
 
+	const D3D12_DESCRIPTOR_HEAP_DESC HeapDesc;
+
+	const uint32_t DescriptorSize;
+
+	std::vector<HeapEntry> HeapMap;
+};

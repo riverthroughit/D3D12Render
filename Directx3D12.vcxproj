@@ -64,6 +64,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOLUTION_DIR=R"($(SolutionDir))";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -92,29 +93,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D12\Camera.cpp" />
-    <ClCompile Include="src\D3D12\D3D12App.cpp" />
     <ClCompile Include="src\D3D12\D3D12Buffer.cpp" />
     <ClCompile Include="src\D3D12\D3D12CommandContext.cpp" />
     <ClCompile Include="src\D3D12\D3D12DescriptorCache.cpp" />
     <ClCompile Include="src\D3D12\D3D12Device.cpp" />
     <ClCompile Include="src\D3D12\D3D12HeapSlotAllocator.cpp" />
     <ClCompile Include="src\D3D12\D3D12MemoryAllocator.cpp" />
-    <ClCompile Include="src\D3D12\D3D12Render.cpp" />
     <ClCompile Include="src\D3D12\D3D12Resource.cpp" />
     <ClCompile Include="src\D3D12\D3D12RHI.cpp" />
     <ClCompile Include="src\D3D12\D3D12Texture.cpp" />
+    <ClCompile Include="src\D3D12\D3D12Utils.cpp" />
     <ClCompile Include="src\D3D12\D3D12View.cpp" />
     <ClCompile Include="src\D3D12\D3D12Viewport.cpp" />
     <ClCompile Include="src\D3D12\MeshGeometry.cpp" />
     <ClCompile Include="src\D3D12\ObjectConsts.cpp" />
-    <ClCompile Include="src\D3D12\ToolForD12.cpp" />
     <ClCompile Include="src\D3D12\UploadBuffer.cpp" />
     <ClCompile Include="src\D3D12\Vertex.cpp" />
     <ClCompile Include="src\File\BinaryReader.cpp" />
     <ClCompile Include="src\File\BinarySaver.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Math\MyMath.cpp" />
+    <ClCompile Include="src\Math\Math.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
+    <ClCompile Include="src\Render\D3D12App.cpp" />
+    <ClCompile Include="src\Render\D3D12Render.cpp" />
+    <ClCompile Include="src\shader\Shader.cpp" />
     <ClCompile Include="src\TextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="src\TextureLoader\HDRTextureLoader.cpp" />
     <ClCompile Include="src\TextureLoader\WICTextureLoader.cpp" />
@@ -126,18 +128,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\D3D12\Camera.h" />
+    <ClInclude Include="src\D3D12\D3D12Utils.h" />
     <ClInclude Include="src\D3D12\D3D12View.h" />
     <ClInclude Include="src\File\BinaryReader.h" />
     <ClInclude Include="src\File\BinarySaver.h" />
     <ClInclude Include="src\File\FileHelpers.h" />
     <ClInclude Include="src\File\PlatformHelpers.h" />
     <ClInclude Include="src\Math\IntPoint.h" />
+    <ClInclude Include="src\Math\Math.h" />
     <ClInclude Include="src\Math\Matrix.h" />
-    <ClInclude Include="src\Math\MyMath.h" />
     <ClInclude Include="src\Math\Transform.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Math\Vector4.h" />
+    <QtMoc Include="src\Render\D3D12App.h" />
+    <ClInclude Include="src\Render\D3D12Render.h" />
+    <ClInclude Include="src\shader\Shader.h" />
     <ClInclude Include="src\TextureLoader\DDS.h" />
     <ClInclude Include="src\TextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="src\TextureLoader\HDRTextureLoader.h" />
@@ -150,14 +156,12 @@
     <ClInclude Include="src\Utils\FormatConvert.h" />
     <ClInclude Include="src\Utils\GameTimer.h" />
     <ClInclude Include="src\Utils\Logger.h" />
-    <QtMoc Include="src\D3D12\D3D12App.h" />
     <ClInclude Include="src\D3D12\D3D12Buffer.h" />
     <ClInclude Include="src\D3D12\D3D12CommandContext.h" />
     <ClInclude Include="src\D3D12\D3D12DescriptorCache.h" />
     <ClInclude Include="src\D3D12\D3D12Device.h" />
     <ClInclude Include="src\D3D12\D3D12HeapSlotAllocator.h" />
     <ClInclude Include="src\D3D12\D3D12MemoryAllocator.h" />
-    <ClInclude Include="src\D3D12\D3D12Render.h" />
     <ClInclude Include="src\D3D12\D3D12Resource.h" />
     <ClInclude Include="src\D3D12\D3D12RHI.h" />
     <ClInclude Include="src\D3D12\D3D12Texture.h" />
@@ -165,7 +169,6 @@
     <ClInclude Include="src\D3D12\d3dx12.h" />
     <ClInclude Include="src\D3D12\MeshGeometry.h" />
     <ClInclude Include="src\D3D12\ObjectConsts.h" />
-    <ClInclude Include="src\D3D12\ToolForD12.h" />
     <ClInclude Include="src\D3D12\UploadBuffer.h" />
     <ClInclude Include="src\D3D12\Vertex.h" />
   </ItemGroup>

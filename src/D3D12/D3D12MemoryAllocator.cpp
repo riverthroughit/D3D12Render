@@ -1,9 +1,10 @@
 #include "D3D12MemoryAllocator.h"
+#include "File/PlatformHelpers.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-D3D12BuddyAllocator::D3D12BuddyAllocator(ID3D12Device* InDevice, const AllocatorInitData& InInitData)
+D3D12BuddyAllocator::D3D12BuddyAllocator(ID3D12Device* InDevice, const TAllocatorInitData& InInitData)
 	: D3DDevice(InDevice), InitData(InInitData)
 {
 	Initialize();
@@ -25,7 +26,7 @@ D3D12BuddyAllocator::~D3D12BuddyAllocator()
 void D3D12BuddyAllocator::Initialize()
 {
 	//Create BackingHeap or BackingResource
-	if (InitData.allocationStrategy == AllocationStrategy::PlacedResource)
+	if (InitData.AllocationStrategy == EAllocationStrategy::PlacedResource)
 	{
 		CD3DX12_HEAP_PROPERTIES HeapProperties(InitData.HeapType);
 		D3D12_HEAP_DESC Desc = {};
@@ -59,11 +60,11 @@ void D3D12BuddyAllocator::Initialize()
 		// Create committed resource, we will allocate sub regions on it.
 		Microsoft::WRL::ComPtr<ID3D12Resource> Resource;
 		ThrowIfFailed(D3DDevice->CreateCommittedResource(
-			&HeapProperties,
+			&HeapProperties, 
 			D3D12_HEAP_FLAG_NONE,
-			&BufferDesc,
-			HeapResourceStates,
-			nullptr,
+			&BufferDesc, 
+			HeapResourceStates, 
+			nullptr, 
 			IID_PPV_ARGS(&Resource)));
 
 		Resource->SetName(L"D3D12BuddyAllocator BackingResource");
@@ -87,7 +88,6 @@ void D3D12BuddyAllocator::Initialize()
 	FreeBlocks[MaxOrder].insert((uint32_t)0);
 }
 
-
 bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12ResourceLocation& ResourceLocation)
 {
 	uint32_t SizeToAllocate = GetSizeToAllocate(Size, Alignment);
@@ -97,7 +97,7 @@ bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12
 		// Allocate block
 		const uint32_t UnitSize = SizeToUnitSize(SizeToAllocate);
 		const uint32_t Order = UnitSizeToOrder(UnitSize);
-		const uint32_t Offset = AllocateBlock(Order); //页为单位的偏移量 This is the offset in MinBlockSize units
+		const uint32_t Offset = AllocateBlock(Order); // This is the offset in MinBlockSize units
 		const uint32_t AllocSize = UnitSize * MinBlockSize;
 		TotalAllocSize += AllocSize;
 
@@ -106,8 +106,7 @@ bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12
 		uint32_t AlignedOffsetFromResourceBase = OffsetFromBaseOfResource;
 		if (Alignment != 0 && OffsetFromBaseOfResource % Alignment != 0)
 		{
-			//首地址偏移到对齐处
-			AlignedOffsetFromResourceBase = ToolForD12::AlignArbitrary(OffsetFromBaseOfResource, Alignment);
+			AlignedOffsetFromResourceBase = AlignArbitrary(OffsetFromBaseOfResource, Alignment);
 
 			uint32_t Padding = AlignedOffsetFromResourceBase - OffsetFromBaseOfResource;
 			assert((Padding + Size) <= AllocSize);
@@ -115,13 +114,13 @@ bool D3D12BuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, D3D12
 		assert((AlignedOffsetFromResourceBase % Alignment) == 0);
 
 		// Save allocation info to ResourceLocation
-		ResourceLocation.SetType(D3D12ResourceLocation::ResourceLocationType::SubAllocation);
+		ResourceLocation.SetType(D3D12ResourceLocation::EResourceLocationType::SubAllocation);
 		ResourceLocation.BlockData.Order = Order;
 		ResourceLocation.BlockData.Offset = Offset;
 		ResourceLocation.BlockData.ActualUsedSize = Size;
 		ResourceLocation.Allocator = this;
 
-		if (InitData.allocationStrategy == AllocationStrategy::ManualSubAllocation)
+		if (InitData.AllocationStrategy == EAllocationStrategy::ManualSubAllocation)
 		{
 			ResourceLocation.UnderlyingResource = BackingResource;
 			ResourceLocation.OffsetFromBaseOfResource = AlignedOffsetFromResourceBase;
@@ -153,7 +152,7 @@ uint32_t D3D12BuddyAllocator::GetSizeToAllocate(uint32_t Size, uint32_t Alignmen
 
 	// If the alignment doesn't match the block size
 	if (Alignment != 0 && MinBlockSize % Alignment != 0)
-	{
+	{   
 		SizeToAllocate = Size + Alignment;
 	}
 
@@ -167,10 +166,8 @@ bool D3D12BuddyAllocator::CanAllocate(uint32_t SizeToAllocate)
 		return false;
 	}
 
-	//该阶的块的大小
 	uint32_t BlockSize = DEFAULT_POOL_SIZE;
 
-	//找空闲块
 	for (int i = (int)FreeBlocks.size() - 1; i >= 0; i--)
 	{
 		if (FreeBlocks[i].size() && BlockSize >= SizeToAllocate)
@@ -192,7 +189,7 @@ uint32_t D3D12BuddyAllocator::AllocateBlock(uint32_t Order)
 
 	if (Order > MaxOrder)
 	{
-		assert(false);
+		assert(false); 
 	}
 
 	if (FreeBlocks[Order].size() == 0)
@@ -245,7 +242,7 @@ void D3D12BuddyAllocator::DeallocateInternal(const D3D12BuddyBlockData& Block)
 	uint32_t Size = OrderToUnitSize(Block.Order) * MinBlockSize;
 	TotalAllocSize -= Size;
 
-	if (InitData.allocationStrategy == AllocationStrategy::PlacedResource)
+	if (InitData.AllocationStrategy == EAllocationStrategy::PlacedResource)
 	{
 		// Release place resource
 		assert(Block.PlacedResource != nullptr);
@@ -276,7 +273,7 @@ void D3D12BuddyAllocator::DeallocateBlock(uint32_t Offset, uint32_t Order)
 	}
 }
 
-D3D12MultiBuddyAllocator::D3D12MultiBuddyAllocator(ID3D12Device* InDevice, const D3D12BuddyAllocator::AllocatorInitData& InInitData)
+D3D12MultiBuddyAllocator::D3D12MultiBuddyAllocator(ID3D12Device* InDevice, const D3D12BuddyAllocator::TAllocatorInitData& InInitData)
 	:Device(InDevice), InitData(InInitData)
 {
 
@@ -297,7 +294,7 @@ bool D3D12MultiBuddyAllocator::AllocResource(uint32_t Size, uint32_t Alignment, 
 		}
 	}
 
-	// Create new allocator
+    // Create new allocator
 	auto Allocator = std::make_shared<D3D12BuddyAllocator>(Device, InitData);
 	Allocators.push_back(Allocator);
 
@@ -317,8 +314,8 @@ void D3D12MultiBuddyAllocator::CleanUpAllocations()
 
 D3D12UploadBufferAllocator::D3D12UploadBufferAllocator(ID3D12Device* InDevice)
 {
-	D3D12BuddyAllocator::AllocatorInitData InitData;
-	InitData.allocationStrategy = D3D12BuddyAllocator::AllocationStrategy::ManualSubAllocation;
+	D3D12BuddyAllocator::TAllocatorInitData InitData;
+	InitData.AllocationStrategy = D3D12BuddyAllocator::EAllocationStrategy::ManualSubAllocation;
 	InitData.HeapType = D3D12_HEAP_TYPE_UPLOAD;
 	InitData.ResourceFlags = D3D12_RESOURCE_FLAG_NONE;
 
@@ -344,8 +341,8 @@ void D3D12UploadBufferAllocator::CleanUpAllocations()
 D3D12DefaultBufferAllocator::D3D12DefaultBufferAllocator(ID3D12Device* InDevice)
 {
 	{
-		D3D12BuddyAllocator::AllocatorInitData InitData;
-		InitData.allocationStrategy = D3D12BuddyAllocator::AllocationStrategy::ManualSubAllocation;
+		D3D12BuddyAllocator::TAllocatorInitData InitData;
+		InitData.AllocationStrategy = D3D12BuddyAllocator::EAllocationStrategy::ManualSubAllocation;
 		InitData.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 		InitData.ResourceFlags = D3D12_RESOURCE_FLAG_NONE;
 
@@ -353,8 +350,8 @@ D3D12DefaultBufferAllocator::D3D12DefaultBufferAllocator(ID3D12Device* InDevice)
 	}
 
 	{
-		D3D12BuddyAllocator::AllocatorInitData InitData;
-		InitData.allocationStrategy = D3D12BuddyAllocator::AllocationStrategy::ManualSubAllocation;
+		D3D12BuddyAllocator::TAllocatorInitData InitData;
+		InitData.AllocationStrategy = D3D12BuddyAllocator::EAllocationStrategy::ManualSubAllocation;
 		InitData.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 		InitData.ResourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
@@ -383,10 +380,10 @@ void D3D12DefaultBufferAllocator::CleanUpAllocations()
 
 
 
-D3D3TextureResourceAllocator::D3D3TextureResourceAllocator(ID3D12Device* InDevice)
+TD3D3TextureResourceAllocator::TD3D3TextureResourceAllocator(ID3D12Device* InDevice)
 {
-	D3D12BuddyAllocator::AllocatorInitData InitData;
-	InitData.allocationStrategy = D3D12BuddyAllocator::AllocationStrategy::PlacedResource;
+	D3D12BuddyAllocator::TAllocatorInitData InitData;
+	InitData.AllocationStrategy = D3D12BuddyAllocator::EAllocationStrategy::PlacedResource;
 	InitData.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 	InitData.HeapFlags = D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES;
 
@@ -395,12 +392,12 @@ D3D3TextureResourceAllocator::D3D3TextureResourceAllocator(ID3D12Device* InDevic
 	D3DDevice = InDevice;
 }
 
-void D3D3TextureResourceAllocator::AllocTextureResource(const D3D12_RESOURCE_STATES& ResourceState, const D3D12_RESOURCE_DESC& ResourceDesc, D3D12ResourceLocation& ResourceLocation)
+void TD3D3TextureResourceAllocator::AllocTextureResource(const D3D12_RESOURCE_STATES& ResourceState, const D3D12_RESOURCE_DESC& ResourceDesc, D3D12ResourceLocation& ResourceLocation)
 {
 	const D3D12_RESOURCE_ALLOCATION_INFO Info = D3DDevice->GetResourceAllocationInfo(0, 1, &ResourceDesc);
 
 	Allocator->AllocResource((uint32_t)Info.SizeInBytes, DEFAULT_RESOURCE_ALIGNMENT, ResourceLocation);
-
+	
 	// Create placed resource
 	{
 		Microsoft::WRL::ComPtr<ID3D12Resource> Resource;
@@ -414,7 +411,7 @@ void D3D3TextureResourceAllocator::AllocTextureResource(const D3D12_RESOURCE_STA
 	}
 }
 
-void D3D3TextureResourceAllocator::CleanUpAllocations()
+void TD3D3TextureResourceAllocator::CleanUpAllocations()
 {
 	Allocator->CleanUpAllocations();
 }

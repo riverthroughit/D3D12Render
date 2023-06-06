@@ -1,6 +1,6 @@
 #pragma once
 
-#include"ToolForD12.h"
+#include "D3D12Utils.h"
 
 class D3D12Device;
 
@@ -50,4 +50,3 @@ private:
 
 	uint32_t RtvDescriptorOffset = 0;
 };
-

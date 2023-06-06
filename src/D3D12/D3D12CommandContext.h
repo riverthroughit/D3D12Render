@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ToolForD12.h"
+#include "D3D12Utils.h"
 #include "D3D12DescriptorCache.h"
 
 class D3D12Device;
@@ -48,4 +48,3 @@ private:
 
 	UINT64 CurrentFenceValue = 0;
 };
-

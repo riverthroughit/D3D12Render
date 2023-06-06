@@ -1,26 +1,26 @@
 #pragma once
-#include "D3D12Resource.h"
-#include<set>
 
+#include "D3D12Resource.h"
+#include <stdint.h>
+#include <set>
 
 #define DEFAULT_POOL_SIZE (512 * 1024 * 512)
 
 #define DEFAULT_RESOURCE_ALIGNMENT 4
 #define UPLOAD_RESOURCE_ALIGNMENT 256
 
-//基于伙伴系统的显存分配
 class D3D12BuddyAllocator
 {
 public:
-	enum class AllocationStrategy
+	enum class EAllocationStrategy
 	{
-		PlacedResource,//将一个heap划分为不同部分
-		ManualSubAllocation//一次CommittedResource的资源划分为不同部分
+		PlacedResource,
+		ManualSubAllocation
 	};
 
-	struct AllocatorInitData
+	struct TAllocatorInitData
 	{
-		AllocationStrategy allocationStrategy;
+		EAllocationStrategy AllocationStrategy;
 
 		D3D12_HEAP_TYPE HeapType;
 
@@ -29,28 +29,8 @@ public:
 		D3D12_RESOURCE_FLAGS ResourceFlags = D3D12_RESOURCE_FLAG_NONE;  // Only for ManualSubAllocation
 	};
 
-
-private:
-	AllocatorInitData InitData;
-
-	const uint32_t MinBlockSize = 256;//页的大小
-
-	uint32_t MaxOrder;//最大阶数
-
-	uint32_t TotalAllocSize = 0;
-
-	std::vector<std::set<uint32_t>> FreeBlocks;//索引为阶数 元素为对应阶数的块的首地址组成的set集合
-
-	std::vector<D3D12BuddyBlockData> DeferredDeletionQueue;
-
-	ID3D12Device* D3DDevice;
-
-	D3D12Resource* BackingResource = nullptr;//ManualSubAllocation
-
-	ID3D12Heap* BackingHeap = nullptr;//PlacedResource
-
 public:
-	D3D12BuddyAllocator(ID3D12Device* InDevice, const AllocatorInitData& InInitData);
+	D3D12BuddyAllocator(ID3D12Device* InDevice, const TAllocatorInitData& InInitData);
 
 	~D3D12BuddyAllocator();
 
@@ -62,36 +42,31 @@ public:
 
 	ID3D12Heap* GetBackingHeap() { return BackingHeap; }
 
-	AllocationStrategy GetAllocationStrategy() { return InitData.allocationStrategy; }
+	EAllocationStrategy GetAllocationStrategy() { return InitData.AllocationStrategy; }
 
 private:
 	void Initialize();
 
 	uint32_t AllocateBlock(uint32_t Order);
 
-	//确保分配的显存在偏移量填充后足够 
 	uint32_t GetSizeToAllocate(uint32_t Size, uint32_t Alignment);
 
 	bool CanAllocate(uint32_t SizeToAllocate);
 
-	//根据显存Size大小计算页的数量
 	uint32_t SizeToUnitSize(uint32_t Size) const
 	{
 		return (Size + (MinBlockSize - 1)) / MinBlockSize;
 	}
 
-	//根据页的数量计算阶数
 	uint32_t UnitSizeToOrder(uint32_t Size) const
 	{
 		unsigned long Result;
-		//从高位到低位 获取第一个1的位数 0011010 -> 0010000
 		_BitScanReverse(&Result, Size + Size - 1); // ceil(log2(size))
 		return Result;
 	}
 
-	//根据阶数计算页的数量
-	uint32_t OrderToUnitSize(uint32_t Order) const
-	{
+	uint32_t OrderToUnitSize(uint32_t Order) const 
+	{ 
 		return ((uint32_t)1) << Order;
 	}
 
@@ -106,14 +81,30 @@ private:
 
 	uint32_t GetAllocOffsetInBytes(uint32_t Offset) const { return Offset * MinBlockSize; }
 
+private:
+	TAllocatorInitData InitData;
 
+	const uint32_t MinBlockSize = 256;
+
+	uint32_t MaxOrder;
+
+	uint32_t TotalAllocSize = 0;
+
+	std::vector<std::set<uint32_t>> FreeBlocks;
+
+	std::vector<D3D12BuddyBlockData> DeferredDeletionQueue;
+
+	ID3D12Device* D3DDevice;
+
+	D3D12Resource* BackingResource = nullptr;
+
+	ID3D12Heap* BackingHeap = nullptr;
 };
-
 
 class D3D12MultiBuddyAllocator
 {
 public:
-	D3D12MultiBuddyAllocator(ID3D12Device* InDevice, const D3D12BuddyAllocator::AllocatorInitData& InInitData);
+	D3D12MultiBuddyAllocator(ID3D12Device* InDevice, const D3D12BuddyAllocator::TAllocatorInitData& InInitData);
 
 	~D3D12MultiBuddyAllocator();
 
@@ -126,7 +117,7 @@ private:
 
 	ID3D12Device* Device;
 
-	D3D12BuddyAllocator::AllocatorInitData InitData;
+	D3D12BuddyAllocator::TAllocatorInitData InitData;
 };
 
 class D3D12UploadBufferAllocator
@@ -161,10 +152,10 @@ private:
 	ID3D12Device* D3DDevice = nullptr;
 };
 
-class D3D3TextureResourceAllocator
+class TD3D3TextureResourceAllocator
 {
 public:
-	D3D3TextureResourceAllocator(ID3D12Device* InDevice);
+	TD3D3TextureResourceAllocator(ID3D12Device* InDevice);
 
 	void AllocTextureResource(const D3D12_RESOURCE_STATES& ResourceState, const D3D12_RESOURCE_DESC& ResourceDesc, D3D12ResourceLocation& ResourceLocation);
 

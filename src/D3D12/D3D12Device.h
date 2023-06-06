@@ -14,7 +14,7 @@ public:
 	~D3D12Device();
 
 public:
-	ID3D12Device* GeD3DDevice() { return D3DDevice.Get(); }
+	ID3D12Device* GetD3DDevice() { return D3DDevice.Get(); }
 
 	D3D12CommandContext* GetCommandContext() { return CommandContext.get(); }
 
@@ -26,7 +26,7 @@ public:
 
 	D3D12DefaultBufferAllocator* GetDefaultBufferAllocator() { return DefaultBufferAllocator.get(); }
 
-	D3D3TextureResourceAllocator* GetTextureResourceAllocator() { return TextureResourceAllocator.get(); }
+	TD3D3TextureResourceAllocator* GeTextureResourceAllocator() { return TextureResourceAllocator.get(); }
 
 	D3D12HeapSlotAllocator* GetHeapSlotAllocator(D3D12_DESCRIPTOR_HEAP_TYPE HeapType);
 
@@ -45,12 +45,12 @@ private:
 
 	std::unique_ptr<D3D12DefaultBufferAllocator> DefaultBufferAllocator = nullptr;
 
-	std::unique_ptr<D3D3TextureResourceAllocator> TextureResourceAllocator = nullptr;
+	std::unique_ptr<TD3D3TextureResourceAllocator> TextureResourceAllocator = nullptr;
 
 	std::unique_ptr<D3D12HeapSlotAllocator> RTVHeapSlotAllocator = nullptr;
 
 	std::unique_ptr<D3D12HeapSlotAllocator> DSVHeapSlotAllocator = nullptr;
 
 	std::unique_ptr<D3D12HeapSlotAllocator> SRVHeapSlotAllocator = nullptr;
-
+	
 };

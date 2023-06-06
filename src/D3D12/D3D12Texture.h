@@ -2,14 +2,14 @@
 
 #include "D3D12Resource.h"
 #include "D3D12View.h"
-#include "Math/MyMath.h"
+#include "Math/Math.h"
 
 class D3D12Texture
 {
 public:
 	D3D12Resource* GetResource() { return ResourceLocation.UnderlyingResource; }
 
-	ID3D12Resource* GeD3DResource() { return ResourceLocation.UnderlyingResource->D3DResource.Get(); }
+	ID3D12Resource* GetD3DResource() { return ResourceLocation.UnderlyingResource->D3DResource.Get(); }
 
 	void SetRTVClearValue(TVector4 ClearValue) { RTVClearValue = ClearValue; }
 

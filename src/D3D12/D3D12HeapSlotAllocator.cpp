@@ -1,5 +1,4 @@
 #include "D3D12HeapSlotAllocator.h"
-
 #include <assert.h>
 
 
@@ -32,7 +31,7 @@ void D3D12HeapSlotAllocator::AllocateHeap()
 	// Create a new descriptorHeap
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> Heap;
 	ThrowIfFailed(D3DDevice->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&Heap)));
-	SetDebugName(Heap.Get(), L"TD3D12HeapSlotAllocator Descriptor Heap");
+	SetDebugName(Heap.Get(), L"D3D12HeapSlotAllocator Descriptor Heap");
 
 	// Add an entry covering the entire heap.
 	DescriptorHandle HeapBase = Heap->GetCPUDescriptorHandleForHeapStart();
@@ -41,7 +40,7 @@ void D3D12HeapSlotAllocator::AllocateHeap()
 	HeapEntry Entry;
 	Entry.Heap = Heap;
 	Entry.FreeList.push_back({ HeapBase.ptr, HeapBase.ptr + (SIZE_T)HeapDesc.NumDescriptors * DescriptorSize });
-
+	
 	// Add the entry to HeapMap
 	HeapMap.push_back(Entry);
 }
@@ -64,11 +63,11 @@ D3D12HeapSlotAllocator::HeapSlot D3D12HeapSlotAllocator::AllocateHeapSlot()
 	{
 		AllocateHeap();
 
-		EntryIndex = int(HeapMap.size() - 1);
+		EntryIndex = int(HeapMap.size() -1);
 	}
 
 	HeapEntry& Entry = HeapMap[EntryIndex];
-	assert(Entry.FreeList.size() > 0);
+	assert(Entry.FreeList.size() > 0 );
 
 	// Allocate  a slot
 	FreeRange& Range = Entry.FreeList.front();
@@ -95,9 +94,8 @@ void D3D12HeapSlotAllocator::FreeHeapSlot(const HeapSlot& Slot)
 		Slot.Handle.ptr + DescriptorSize
 	};
 
-	//不用递归向上合并
 	bool bFound = false;
-	for (auto Node = Entry.FreeList.begin(); Node != Entry.FreeList.end() && !bFound; Node++)
+	for (auto Node = Entry.FreeList.begin(); Node != Entry.FreeList.end() && !bFound; Node++ )
 	{
 		FreeRange& Range = *Node;
 		assert(Range.Start < Range.End);
@@ -129,3 +127,5 @@ void D3D12HeapSlotAllocator::FreeHeapSlot(const HeapSlot& Slot)
 		Entry.FreeList.push_back(NewRange);
 	}
 }
+
+

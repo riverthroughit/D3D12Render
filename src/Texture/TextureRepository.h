@@ -5,15 +5,15 @@
 #include <memory>
 #include "Texture.h"
 
-class TTextureRepository
+class TextureRepository
 {
 public:
-	static TTextureRepository& Get();
+	static TextureRepository& Get();
 
 	void Load();
 
 	void Unload();
 
 public:
-	std::unordered_map<std::string /*TextureName*/, std::shared_ptr<TTexture>> TextureMap;
+	std::unordered_map<std::string /*TextureName*/, std::shared_ptr<Texture>> TextureMap;
 };

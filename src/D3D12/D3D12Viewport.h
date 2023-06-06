@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ToolForD12.h"
+#include "D3D12Utils.h"
 #include "D3D12Texture.h"
 
 class D3D12RHI;
@@ -26,7 +26,7 @@ public:
 public:
 	void OnResize(int NewWidth, int NewHeight);
 
-	void GeD3DViewport(D3D12_VIEWPORT& OuD3DViewPort, D3D12_RECT& OuD3DRect);
+	void GetD3DViewport(D3D12_VIEWPORT& OutD3DViewPort, D3D12_RECT& OutD3DRect);
 
 	void Present();
 
@@ -54,11 +54,11 @@ private:
 	int ViewportWidth = 0;
 	int ViewportHeight = 0;
 
-	static const int SwapChainBufferCount = 2;
+	static const int SwapChainBufferCount = 2;	
 	Microsoft::WRL::ComPtr<IDXGISwapChain> SwapChain = nullptr;
 	int CurrBackBuffer = 0;
-
-	D3D12TextureRef RenderTargetTextures[SwapChainBufferCount];
+	
+	D3D12TextureRef RenderTargeTextures[SwapChainBufferCount];
 
 	D3D12TextureRef DepthStencilTexture = nullptr;
 };

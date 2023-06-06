@@ -35,6 +35,12 @@
     <Filter Include="src\File">
       <UniqueIdentifier>{4e87d93b-d95f-42b9-85c5-425c6692129c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Render">
+      <UniqueIdentifier>{50a792dc-0dc4-45cc-a147-a800b22c8d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Shader">
+      <UniqueIdentifier>{8d28b37f-e690-457e-8fb6-565398863fde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="D3D12App.qrc">
@@ -46,15 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D12\Camera.cpp">
-      <Filter>src\D3D12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D12\D3D12App.cpp">
-      <Filter>src\D3D12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D12\D3D12Render.cpp">
-      <Filter>src\D3D12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D12\MeshGeometry.cpp">
@@ -99,17 +96,11 @@
     <ClCompile Include="src\D3D12\D3D12Viewport.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D12\ToolForD12.cpp">
-      <Filter>src\D3D12</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\GameTimer.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D12\D3D12View.cpp">
       <Filter>src\D3D12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Math\MyMath.cpp">
-      <Filter>src\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Math\Transform.cpp">
       <Filter>src\Math</Filter>
@@ -135,12 +126,27 @@
     <ClCompile Include="src\File\BinarySaver.cpp">
       <Filter>src\File</Filter>
     </ClCompile>
+    <ClCompile Include="src\shader\Shader.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\D3D12App.cpp">
+      <Filter>src\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\D3D12Render.cpp">
+      <Filter>src\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\Math.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\D3D12Utils.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\D3D12\Camera.h">
-      <Filter>src\D3D12</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D12\D3D12Render.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="src\D3D12\MeshGeometry.h">
@@ -185,14 +191,8 @@
     <ClInclude Include="src\D3D12\D3D12Viewport.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D12\ToolForD12.h">
-      <Filter>src\D3D12</Filter>
-    </ClInclude>
     <ClInclude Include="src\D3D12\d3dx12.h">
       <Filter>src\D3D12</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Math\MyMath.h">
-      <Filter>src\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\GameTimer.h">
       <Filter>src\Utils</Filter>
@@ -263,10 +263,22 @@
     <ClInclude Include="src\File\PlatformHelpers.h">
       <Filter>src\File</Filter>
     </ClInclude>
+    <ClInclude Include="src\shader\Shader.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Render\D3D12Render.h">
+      <Filter>src\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Math.h">
+      <Filter>src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\D3D12Utils.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="src\D3D12\D3D12App.h">
-      <Filter>src\D3D12</Filter>
+    <QtMoc Include="src\Render\D3D12App.h">
+      <Filter>src\Render</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

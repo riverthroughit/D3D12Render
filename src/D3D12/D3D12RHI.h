@@ -4,9 +4,8 @@
 #include "D3D12Viewport.h"
 #include "D3D12Texture.h"
 #include "D3D12Buffer.h"
-//#include "Texture/TextureInfo.h"
-#include "Math/MyMath.h"
-
+#include "Texture/TextureInfo.h"
+#include "Math/Math.h"
 
 class D3D12RHI
 {
@@ -62,10 +61,10 @@ public:
 
 	D3D12ReadBackBufferRef CreateReadBackBuffer(uint32_t Size);
 
-	D3D12TextureRef CreateTexture(const TTextureInfo& TextureInfo, uint32_t CreateFlags, TVector4 RTVClearValue = TVector4::Zero);
+	D3D12TextureRef CreateTexture(const TextureInfo& TextureInfo, uint32_t CreateFlags, TVector4 RTVClearValue = TVector4::Zero);
 
 	// Use D3DResource to create texture, texture will manage this D3DResource
-	D3D12TextureRef CreateTexture(Microsoft::WRL::ComPtr<ID3D12Resource> D3DResource, TTextureInfo& TextureInfo, uint32_t CreateFlags);
+	D3D12TextureRef CreateTexture(Microsoft::WRL::ComPtr<ID3D12Resource> D3DResource, TextureInfo& TextureInfo, uint32_t CreateFlags);
 
 	void UploadTextureData(D3D12TextureRef Texture, const std::vector<D3D12_SUBRESOURCE_DATA>& InitData);
 
@@ -82,9 +81,9 @@ private:
 
 	void CreateAndInitDefaultBuffer(const void* Contents, uint32_t Size, uint32_t Alignment, D3D12ResourceLocation& ResourceLocation);
 
-	D3D12TextureRef CreateTextureResource(const TTextureInfo& TextureInfo, uint32_t CreateFlags, TVector4 RTVClearValue);
+	D3D12TextureRef CreateTextureResource(const TextureInfo& TextureInfo, uint32_t CreateFlags, TVector4 RTVClearValue);
 
-	void CreateTextureViews(D3D12TextureRef TextureRef, const TTextureInfo& TextureInfo, uint32_t CreateFlags);
+	void CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo& TextureInfo, uint32_t CreateFlags);
 
 private:
 	void LogAdapters();
@@ -104,4 +103,3 @@ private:
 
 	Microsoft::WRL::ComPtr<IDXGIFactory4> DxgiFactory = nullptr;
 };
-
