@@ -1,5 +1,5 @@
 #pragma once
-#include "ToolForD12.h"
+#include "D3D12Utils.h"
 
 template<typename T>
 class UploadBuffer

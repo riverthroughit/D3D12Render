@@ -1,5 +1,4 @@
 #include "D3D12Render.h"
-#include"Vertex.h"
 
 using namespace DirectX;
 

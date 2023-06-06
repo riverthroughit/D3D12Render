@@ -4,14 +4,14 @@
 #include <crtdbg.h>
 #endif
 
-#include "ToolForD12.h"
+#include "D3D12/D3D12Utils.h"
 #include"Utils/GameTimer.h"
-#include"MeshGeometry.h"
-#include"Math/MyMath.h"
-#include"Camera.h"
+#include"D3D12/MeshGeometry.h"
+#include"Math/Math.h"
+#include"D3D12/Camera.h"
 
-#include"ObjectConsts.h"
-#include"UploadBuffer.h"
+#include"D3D12/ObjectConsts.h"
+#include"D3D12/UploadBuffer.h"
 
 
 // Link necessary d3d12 libraries.
