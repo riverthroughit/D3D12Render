@@ -16,23 +16,12 @@ class Camera
     float fovAngleY;
     float nearPlane, farPlane;
 
-    bool viewDirty = true;
-    DirectX::XMFLOAT4X4 mView = Math::identity4x4();
-    DirectX::XMFLOAT4X4 mProj = Math::identity4x4();
-    //DirectX::XMFLOAT4X4 mVP = Math::identity4x4();
-
     void updatePos() {
         float x = radius * sinf(theta) * cosf(phi);
         float z = radius * sinf(theta) * sinf(phi);
         float y = radius * cosf(theta);
         pos = DirectX::XMVectorSet(x, y, z, 1.0f);
     }
-
-    //void updateView() {
-    //    DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, target, up);
-    //    XMStoreFloat4x4(&mView, view);
-    //}
-
 
 public:
 
@@ -46,50 +35,24 @@ public:
     }
 
     void setTheta(float t) {
-        theta = Math::clamp(t, thetaRange.first, thetaRange.second);
+        theta = MyMath::clamp(t, thetaRange.first, thetaRange.second);
         updatePos();
-        viewDirty = true;
     }
 
     void setPhi(float p) {
         phi = p;
         updatePos();
-        viewDirty = true;
     }
 
     void setThetaAndPhi(float t, float p) {
         theta = t;
         phi = p;
         updatePos();
-        viewDirty = true;
     }
 
     void setRadius(float r) {
-        radius = Math::clamp(r, radiusRange.first, radiusRange.second);
+        radius = MyMath::clamp(r, radiusRange.first, radiusRange.second);
         updatePos();
-        viewDirty = true;
-    }
-
-    void updateProj(float aspectRatio) {
-        DirectX::XMMATRIX P = DirectX::XMMatrixPerspectiveFovLH(
-            fovAngleY, aspectRatio, nearPlane, farPlane);
-        XMStoreFloat4x4(&mProj, P);
-    }
-
-    DirectX::XMFLOAT4X4 getViewProj() {     
-        if (viewDirty) {
-            DirectX::XMMATRIX newView = DirectX::XMMatrixLookAtLH(pos, target, up);
-            DirectX::XMStoreFloat4x4(&mView ,newView);
-            viewDirty = false;
-        }
-            
-        DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&mView);
-        DirectX::XMMATRIX proj = XMLoadFloat4x4(&mProj);
-        DirectX::XMMATRIX viewProj = view * proj;
-
-        DirectX::XMFLOAT4X4 vp;
-        DirectX::XMStoreFloat4x4(&vp, viewProj);
-        return vp;
     }
 
     DirectX::XMVECTOR getPos() {

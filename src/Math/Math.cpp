@@ -1,4 +1,4 @@
-#include "Math.h"
+#include "MyMath.h"
 
 const TVector3 TVector3::Zero = { 0.f, 0.f, 0.f };
 const TVector3 TVector3::One = { 1.f, 1.f, 1.f };
@@ -25,5 +25,5 @@ const TMatrix TMatrix::Identity = { 1.f, 0.f, 0.f, 0.f,
 								  0.f, 0.f, 0.f, 1.f };
 
 
-const float Math::Infinity = FLT_MAX;
-const float Math::Pi = 3.1415926535f;
+const float MyMath::Infinity = FLT_MAX;
+const float MyMath::Pi = 3.1415926535f;

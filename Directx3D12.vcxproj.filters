@@ -41,12 +41,6 @@
     <Filter Include="src\Shader">
       <UniqueIdentifier>{8d28b37f-e690-457e-8fb6-565398863fde}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Mesh">
-      <UniqueIdentifier>{0b313cf5-65d8-455c-bd8f-3f87403dcca8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scene">
-      <UniqueIdentifier>{34e025a9-a7d8-4d9f-96dc-801c3c1b5897}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="D3D12App.qrc">
@@ -57,7 +51,19 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\D3D12\Camera.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
     <ClCompile Include="src\D3D12\MeshGeometry.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\ObjectConsts.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\UploadBuffer.cpp">
+      <Filter>src\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D12\Vertex.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D12\D3D12DescriptorCache.cpp">
@@ -138,27 +144,21 @@
     <ClCompile Include="src\D3D12\D3D12Utils.cpp">
       <Filter>src\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mesh\Mesh.cpp">
-      <Filter>src\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mesh\MeshLoader.cpp">
-      <Filter>src\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Camera.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\InputLayout.cpp">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\PSO.cpp">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\RenderTarget.cpp">
-      <Filter>src\Render</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\D3D12\Camera.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
     <ClInclude Include="src\D3D12\MeshGeometry.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\ObjectConsts.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\UploadBuffer.h">
+      <Filter>src\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D12\Vertex.h">
       <Filter>src\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="src\D3D12\D3D12DescriptorCache.h">
@@ -274,24 +274,6 @@
     </ClInclude>
     <ClInclude Include="src\D3D12\D3D12Utils.h">
       <Filter>src\D3D12</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mesh\Mesh.h">
-      <Filter>src\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mesh\MeshLoader.h">
-      <Filter>src\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\Camera.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\InputLayout.h">
-      <Filter>src\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\PSO.h">
-      <Filter>src\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Render\RenderTarget.h">
-      <Filter>src\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

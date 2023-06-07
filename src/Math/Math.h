@@ -14,7 +14,7 @@
 #define MachineEpsilon (std::numeric_limits<float>::epsilon() * 0.5)
 
 
-struct Math {
+struct MyMath {
 
     static DirectX::XMFLOAT4X4 identity4x4()
     {

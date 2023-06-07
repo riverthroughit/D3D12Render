@@ -7,19 +7,19 @@
 
 using Microsoft::WRL::ComPtr;
 
-enum class ShaderType
+enum class EShaderType
 {
 	VERTEX_SHADER,
 	PIXEL_SHADER,
 	COMPUTE_SHADER,
 };
 
-struct ShaderDefines
+struct TShaderDefines
 {
 public:
 	void GetD3DShaderMacro(std::vector<D3D_SHADER_MACRO>& OutMacros) const;
 
-	bool operator == (const ShaderDefines& Other) const;
+	bool operator == (const TShaderDefines& Other) const;
 
 	void SetDefine(const std::string& Name, const std::string& Definition);
 
@@ -27,13 +27,13 @@ public:
 	std::unordered_map<std::string, std::string> DefinesMap;
 };
 
-// declare hash<ShaderDefines>
+// declare hash<TShaderDefines>
 namespace std
 {
 	template <>
-	struct hash<ShaderDefines>
+	struct hash<TShaderDefines>
 	{
-		std::size_t operator()(const ShaderDefines& Defines) const
+		std::size_t operator()(const TShaderDefines& Defines) const
 		{
 			using std::size_t;
 			using std::hash;
@@ -54,45 +54,45 @@ namespace std
 	};
 }
 
-struct ShaderParameter
+struct TShaderParameter
 {
 	std::string Name;
-	ShaderType ShaderType;
+	EShaderType ShaderType;
 	UINT BindPoint;
 	UINT RegisterSpace;
 };
 
-struct ShaderCBVParameter : ShaderParameter
+struct TShaderCBVParameter : TShaderParameter
 {
 	D3D12ConstantBufferRef ConstantBufferRef;
 };
 
-struct ShaderSRVParameter : ShaderParameter 
+struct TShaderSRVParameter : TShaderParameter 
 {
 	UINT BindCount;
 
 	std::vector<D3D12ShaderResourceView*> SRVList;
 };
 
-struct ShaderUAVParameter : ShaderParameter
+struct TShaderUAVParameter : TShaderParameter
 {
 	UINT BindCount;
 
 	std::vector<D3D12UnorderedAccessView*> UAVList;
 };
 
-struct ShaderSamplerParameter : ShaderParameter
+struct TShaderSamplerParameter : TShaderParameter
 {
 
 };
 
-struct ShaderInfo
+struct TShaderInfo
 {
 	std::string ShaderName;
 
 	std::string FileName;
 
-	ShaderDefines ShaderDefines;
+	TShaderDefines ShaderDefines;
 
 	bool bCreateVS = false;
 
@@ -107,10 +107,10 @@ struct ShaderInfo
 	std::string CSEntryPoint = "CS";
 };
 
-class Shader
+class TShader
 {
 public:
-	Shader(const ShaderInfo& InShaderInfo, D3D12RHI* InD3D12RHI);
+	TShader(const TShaderInfo& InShaderInfo, D3D12RHI* InD3D12RHI);
 
 	void Initialize();
 
@@ -129,9 +129,9 @@ public:
 private:
 	static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(const std::wstring& Filename, const D3D_SHADER_MACRO* Defines, const std::string& Entrypoint, const std::string& Target);
 
-	void GetShaderParameters(ComPtr<ID3DBlob> PassBlob, ShaderType ShaderType);
+	void GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderType);
 
-	D3D12_SHADER_VISIBILITY GetShaderVisibility(ShaderType ShaderType);
+	D3D12_SHADER_VISIBILITY GetShaderVisibility(EShaderType ShaderType);
 
 	std::vector<CD3DX12_STATIC_SAMPLER_DESC> CreateStaticSamplers();
 
@@ -142,15 +142,15 @@ private:
 	void ClearBindings();
 
 public:
-	ShaderInfo ShaderInfo;
+	TShaderInfo ShaderInfo;
 
-	std::vector<ShaderCBVParameter> CBVParams;
+	std::vector<TShaderCBVParameter> CBVParams;
 
-	std::vector<ShaderSRVParameter> SRVParams;
+	std::vector<TShaderSRVParameter> SRVParams;
 
-	std::vector<ShaderUAVParameter> UAVParams;
+	std::vector<TShaderUAVParameter> UAVParams;
 
-	std::vector<ShaderSamplerParameter> SamplerParams;
+	std::vector<TShaderSamplerParameter> SamplerParams;
 
 	int CBVSignatureBaseBindSlot = -1;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math.h"
+#include "MyMath.h"
 
 struct TRotator
 {
@@ -32,7 +32,7 @@ public:
 	TMatrix GetTransformMatrix() const
 	{
 		TMatrix S = TMatrix::CreateScale(Scale);
-		TMatrix R = TMatrix::CreateFromYawPitchRoll(Rotation.Yaw * Math::Pi / 180.0f, Rotation.Pitch * Math::Pi / 180.0f, Rotation.Roll * Math::Pi / 180.0f);
+		TMatrix R = TMatrix::CreateFromYawPitchRoll(Rotation.Yaw * TMath::Pi / 180.0f, Rotation.Pitch * TMath::Pi / 180.0f, Rotation.Roll * TMath::Pi / 180.0f);
 		TMatrix T = TMatrix::CreateTranslation(Location);
 
 		return S * R * T;

@@ -7,7 +7,7 @@ D3D12App::D3D12App(QWidget *parent)
     ui.setupUi(this);
     //允许DX渲染
     QWidget::setAttribute(Qt::WA_PaintOnScreen); 
-    //initDirect3D();
+    initDirect3D();
 
 }
 
@@ -19,16 +19,16 @@ void D3D12App::timerEvent(QTimerEvent* event) {
 }
 
 void D3D12App::paintEvent(QPaintEvent* event) {
-	mGameTimer.tick();
+	gameTimer.tick();
 	printFPS(calculateFrameState());
-	//updateData();
-	//draw();
+	updateData();
+	draw();
 }
 
 void D3D12App::resizeEvent(QResizeEvent* event){
-    //mClientWidth = width();
-    //mClientHeight = height();
-    //onResize();
+    mClientWidth = width();
+    mClientHeight = height();
+    onResize();
 }
 
 float D3D12App::calculateFrameState()
@@ -38,7 +38,7 @@ float D3D12App::calculateFrameState()
 	static float fps = 0;//当前fps
 	++frameCnt;	//每帧++，经过一秒后其即为FPS值
 	//判断模块
-	if (mGameTimer.totalTime() - timeElapsed >= 1.0f){//一旦>=0，说明刚好过一秒
+	if (gameTimer.totalTime() - timeElapsed >= 1.0f){//一旦>=0，说明刚好过一秒
 		fps = (float)frameCnt;//每秒多少帧
 		//为计算下一组帧数值而重置
 		frameCnt = 0;
@@ -84,8 +84,8 @@ void D3D12App::mouseMoveEvent(QMouseEvent* event) {
     float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(nowY - lastY));
 
     //更改相机位置
-    //mCamera.setTheta(mCamera.getTheta() + dy);
-    //mCamera.setPhi(mCamera.getPhi() - dx);
+    mCamera.setTheta(mCamera.getTheta() + dy);
+    mCamera.setPhi(mCamera.getPhi() - dx);
 
     lastX = nowX, lastY = nowY;
 }
@@ -98,7 +98,7 @@ void D3D12App::mouseReleaseEvent(QMouseEvent* event){
 void D3D12App::wheelEvent(QWheelEvent* event){
     int wheelDis = event->delta() / 24;//滚轮滑动次数
     //0.005的映射关系
-    //mCamera.setRadius(mCamera.getRadius() - 0.05f * static_cast<float>(wheelDis));
+    mCamera.setRadius(mCamera.getRadius() - 0.05f * static_cast<float>(wheelDis));
 }
 
 void D3D12App::keyPressEvent(QKeyEvent* event){
