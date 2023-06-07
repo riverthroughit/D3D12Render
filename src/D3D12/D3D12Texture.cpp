@@ -133,13 +133,13 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 			SrvDesc.Format = TextureInfo.SRVFormat;
 		}
 
-		if (TextureInfo.Type == ETextureType::TEXTURE_2D)
+		if (TextureInfo.Type == TextureType::TEXTURE_2D)
 		{
 			SrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 			SrvDesc.Texture2D.MostDetailedMip = 0;
 			SrvDesc.Texture2D.MipLevels = (uint16_t)TextureInfo.MipCount;
 		}
-		else if(TextureInfo.Type == ETextureType::TEXTURE_CUBE)
+		else if(TextureInfo.Type == TextureType::TEXTURE_CUBE)
 		{
 			SrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 			SrvDesc.TextureCube.MostDetailedMip = 0;
@@ -152,7 +152,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 			SrvDesc.Texture3D.MipLevels = (uint16_t)TextureInfo.MipCount;
 		}
 
-		TextureRef->AddSRV(std::make_unique<D3D12ShaderResourceView>(GetDevice(), SrvDesc, TextureResource));
+		auto SRV = std::make_unique<D3D12ShaderResourceView>(GetDevice(), SrvDesc, TextureResource);
+		TextureRef->AddSRV(SRV);
 	}
 
 	// Create RTV
@@ -172,7 +173,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 			RtvDesc.Format = TextureInfo.RTVFormat;
 		}
 
-		TextureRef->AddRTV(std::make_unique<D3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
+		auto RTV = std::make_unique<D3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource);
+		TextureRef->AddRTV(RTV);
 	}
 	else if (CreateFlags & TexCreate_CubeRTV)
 	{
@@ -194,7 +196,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 				RtvDesc.Format = TextureInfo.RTVFormat;
 			}
 
-			TextureRef->AddRTV(std::make_unique<D3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource));
+			auto RTV = std::make_unique<D3D12RenderTargetView>(GetDevice(), RtvDesc, TextureResource);
+			TextureRef->AddRTV(RTV);
 		}
 	}
 
@@ -215,7 +218,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 			DSVDesc.Format = TextureInfo.DSVFormat;
 		}
 
-		TextureRef->AddDSV(std::make_unique<D3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
+		auto DSV = std::make_unique<D3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource);
+		TextureRef->AddDSV(DSV);
 	}
 	else if (CreateFlags & TexCreate_CubeDSV)
 	{
@@ -237,7 +241,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 				DSVDesc.Format = TextureInfo.DSVFormat;
 			}
 
-			TextureRef->AddDSV(std::make_unique<D3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource));
+			auto DSV = std::make_unique<D3D12DepthStencilView>(GetDevice(), DSVDesc, TextureResource);
+			TextureRef->AddDSV(DSV);
 		}
 	}
 
@@ -257,7 +262,8 @@ void  D3D12RHI::CreateTextureViews(D3D12TextureRef TextureRef, const TextureInfo
 			UAVDesc.Format = TextureInfo.UAVFormat;
 		}
 
-		TextureRef->AddUAV(std::make_unique<D3D12UnorderedAccessView>(GetDevice(), UAVDesc, TextureResource));
+		auto UAV = std::make_unique<D3D12UnorderedAccessView>(GetDevice(), UAVDesc, TextureResource);
+		TextureRef->AddUAV(UAV);
 	}
 }
 

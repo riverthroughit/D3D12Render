@@ -16,6 +16,7 @@ protected:
 
 private:
     Ui::D3D12AppClass ui;
+    GameTimer mGameTimer;//计时器
     bool mAppPaused = false;//当前是否暂停
     
     int timerID;//qt绘图定时器id

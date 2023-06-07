@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include "File/FileHelpers.h"
 
-void TShaderDefines::GetD3DShaderMacro(std::vector<D3D_SHADER_MACRO>& OutMacros) const
+void ShaderDefines::GetD3DShaderMacro(std::vector<D3D_SHADER_MACRO>& OutMacros) const
 {
 	for (const auto& Pair : DefinesMap)
 	{
@@ -17,7 +17,7 @@ void TShaderDefines::GetD3DShaderMacro(std::vector<D3D_SHADER_MACRO>& OutMacros)
 	OutMacros.push_back(Macro);
 }
 
-bool TShaderDefines::operator == (const TShaderDefines& Other) const
+bool ShaderDefines::operator == (const ShaderDefines& Other) const
 {
 	if (DefinesMap.size() != Other.DefinesMap.size())
 	{
@@ -39,13 +39,13 @@ bool TShaderDefines::operator == (const TShaderDefines& Other) const
 	return true;
 }
 
-void TShaderDefines::SetDefine(const std::string& Name, const std::string& Definition)
+void ShaderDefines::SetDefine(const std::string& Name, const std::string& Definition)
 {
 	DefinesMap.insert_or_assign(Name, Definition);
 }
 
 
-TShader::TShader(const TShaderInfo& InShaderInfo, D3D12RHI* InD3D12RHI)
+Shader::Shader(const ::ShaderInfo& InShaderInfo, ::D3D12RHI* InD3D12RHI)
 	: ShaderInfo(InShaderInfo), D3D12RHI(InD3D12RHI)
 {
 	Initialize();
@@ -53,11 +53,11 @@ TShader::TShader(const TShaderInfo& InShaderInfo, D3D12RHI* InD3D12RHI)
 	assert((ShaderInfo.bCreateVS | ShaderInfo.bCreatePS) ^ ShaderInfo.bCreateCS);
 }
 
-void TShader::Initialize()
+void Shader::Initialize()
 {
 	// Compile Shaders
 	std::wstring ShaderDir = TFileHelpers::EngineDir() + L"Resource/Shaders/";
-	std::wstring FilePath = ShaderDir + TFormatConvert::StrToWStr(ShaderInfo.FileName) + L".hlsl";
+	std::wstring FilePath = ShaderDir + FormatConvert::StrToWStr(ShaderInfo.FileName) + L".hlsl";
 
 	std::vector<D3D_SHADER_MACRO> ShaderMacros;
 	ShaderInfo.ShaderDefines.GetD3DShaderMacro(ShaderMacros);
@@ -67,7 +67,7 @@ void TShader::Initialize()
 		auto VSBlob = CompileShader(FilePath, ShaderMacros.data(), ShaderInfo.VSEntryPoint, "vs_5_1");
 		ShaderPass["VS"] = VSBlob;
 
-		GetShaderParameters(VSBlob, EShaderType::VERTEX_SHADER);
+		GetShaderParameters(VSBlob, ShaderType::VERTEX_SHADER);
 	}
 
 	if (ShaderInfo.bCreatePS)
@@ -75,7 +75,7 @@ void TShader::Initialize()
 		auto PSBlob = CompileShader(FilePath, ShaderMacros.data(), ShaderInfo.PSEntryPoint, "ps_5_1");
 		ShaderPass["PS"] = PSBlob;
 
-		GetShaderParameters(PSBlob, EShaderType::PIXEL_SHADER);
+		GetShaderParameters(PSBlob, ShaderType::PIXEL_SHADER);
 	}
 	
 	if (ShaderInfo.bCreateCS)
@@ -83,14 +83,14 @@ void TShader::Initialize()
 		auto CSBlob = CompileShader(FilePath, ShaderMacros.data(), ShaderInfo.CSEntryPoint, "cs_5_1");
 		ShaderPass["CS"] = CSBlob;
 
-		GetShaderParameters(CSBlob, EShaderType::COMPUTE_SHADER);
+		GetShaderParameters(CSBlob, ShaderType::COMPUTE_SHADER);
 	}
 	
 	// Create rootSignature
 	CreateRootSignature();
 }
 
-Microsoft::WRL::ComPtr<ID3DBlob> TShader::CompileShader(const std::wstring& Filename, const D3D_SHADER_MACRO* Defines, const std::string& Entrypoint, const std::string& Target)
+Microsoft::WRL::ComPtr<ID3DBlob> Shader::CompileShader(const std::wstring& Filename, const D3D_SHADER_MACRO* Defines, const std::string& Entrypoint, const std::string& Target)
 {
 	UINT CompileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG) 
@@ -113,7 +113,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> TShader::CompileShader(const std::wstring& File
 	return ByteCode;
 }
 
-void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderType)
+void Shader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, ShaderType ShaderType)
 {
 	ID3D12ShaderReflection* Reflection = NULL;
 	D3DReflect(PassBlob->GetBufferPointer(), PassBlob->GetBufferSize(), IID_ID3D12ShaderReflection, (void**)&Reflection);
@@ -142,7 +142,7 @@ void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderT
 
 		if (ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_CBUFFER)
 		{
-			TShaderCBVParameter Param;
+			ShaderCBVParameter Param;
 			Param.Name = ShaderVarName;
 			Param.ShaderType = ShaderType;
 			Param.BindPoint = BindPoint;
@@ -153,7 +153,7 @@ void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderT
 		else if (ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_STRUCTURED
 			  || ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_TEXTURE)
 		{
-			TShaderSRVParameter Param;
+			ShaderSRVParameter Param;
 			Param.Name = ShaderVarName;
 			Param.ShaderType = ShaderType;
 			Param.BindPoint = BindPoint;
@@ -165,9 +165,9 @@ void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderT
 		else if (ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED
 			  || ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWTYPED)
 		{
-			assert(ShaderType == EShaderType::COMPUTE_SHADER);
+			assert(ShaderType == ShaderType::COMPUTE_SHADER);
 
-			TShaderUAVParameter Param;
+			ShaderUAVParameter Param;
 			Param.Name = ShaderVarName;
 			Param.ShaderType = ShaderType;
 			Param.BindPoint = BindPoint;
@@ -178,9 +178,9 @@ void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderT
 		}
 		else if (ResourceType == D3D_SHADER_INPUT_TYPE::D3D_SIT_SAMPLER)
 		{
-			assert(ShaderType == EShaderType::PIXEL_SHADER);
+			assert(ShaderType == ShaderType::PIXEL_SHADER);
 
-			TShaderSamplerParameter Param;
+			ShaderSamplerParameter Param;
 			Param.Name = ShaderVarName;
 			Param.ShaderType = ShaderType;
 			Param.BindPoint = BindPoint;
@@ -191,18 +191,18 @@ void TShader::GetShaderParameters(ComPtr<ID3DBlob> PassBlob, EShaderType ShaderT
 	}
 }
 
-D3D12_SHADER_VISIBILITY TShader::GetShaderVisibility(EShaderType ShaderType)
+D3D12_SHADER_VISIBILITY Shader::GetShaderVisibility(ShaderType ShaderType)
 {
 	D3D12_SHADER_VISIBILITY ShaderVisibility;
-	if (ShaderType == EShaderType::VERTEX_SHADER)
+	if (ShaderType == ShaderType::VERTEX_SHADER)
 	{
 		ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	}
-	else if (ShaderType == EShaderType::PIXEL_SHADER)
+	else if (ShaderType == ShaderType::PIXEL_SHADER)
 	{
 		ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	}
-	else if(ShaderType == EShaderType::COMPUTE_SHADER)
+	else if(ShaderType == ShaderType::COMPUTE_SHADER)
 	{
 		ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	}
@@ -214,7 +214,7 @@ D3D12_SHADER_VISIBILITY TShader::GetShaderVisibility(EShaderType ShaderType)
 	return ShaderVisibility;
 }
 
-std::vector<CD3DX12_STATIC_SAMPLER_DESC> TShader::CreateStaticSamplers()
+std::vector<CD3DX12_STATIC_SAMPLER_DESC> Shader::CreateStaticSamplers()
 {
 	// Applications usually only need a handful of samplers.  So just define them all up front
 	// and keep them available as part of the root signature.  
@@ -301,13 +301,13 @@ std::vector<CD3DX12_STATIC_SAMPLER_DESC> TShader::CreateStaticSamplers()
 	return StaticSamplers;
 }
 
-void TShader::CreateRootSignature()
+void Shader::CreateRootSignature()
 {
 	//------------------------------------------------Set SlotRootParameter---------------------------------------
 	std::vector<CD3DX12_ROOT_PARAMETER> SlotRootParameter;
 
 	// CBV
-	for (const TShaderCBVParameter& Param : CBVParams)
+	for (const ShaderCBVParameter& Param : CBVParams)
 	{
 		if (CBVSignatureBaseBindSlot == -1)
 		{
@@ -321,7 +321,7 @@ void TShader::CreateRootSignature()
 
 	// SRV
 	{
-		for (const TShaderSRVParameter& Param : SRVParams)
+		for (const ShaderSRVParameter& Param : SRVParams)
 		{
 			SRVCount += Param.BindCount;
 		}
@@ -342,7 +342,7 @@ void TShader::CreateRootSignature()
 
 	// UAV
 	{
-		for (const TShaderUAVParameter& Param : UAVParams)
+		for (const ShaderUAVParameter& Param : UAVParams)
 		{
 			UAVCount += Param.BindCount;
 		}
@@ -389,11 +389,11 @@ void TShader::CreateRootSignature()
 		IID_PPV_ARGS(&RootSignature)));
 }
 
-bool TShader::SetParameter(std::string ParamName, D3D12ConstantBufferRef ConstantBufferRef)
+bool Shader::SetParameter(std::string ParamName, D3D12ConstantBufferRef ConstantBufferRef)
 {
 	bool FindParam = false;
 
-	for (TShaderCBVParameter& Param : CBVParams)
+	for (ShaderCBVParameter& Param : CBVParams)
 	{
 		if (Param.Name == ParamName)
 		{
@@ -406,7 +406,7 @@ bool TShader::SetParameter(std::string ParamName, D3D12ConstantBufferRef Constan
 	return FindParam;
 }
 
-bool TShader::SetParameter(std::string ParamName, D3D12ShaderResourceView* SRV)
+bool Shader::SetParameter(std::string ParamName, D3D12ShaderResourceView* SRV)
 {
 	std::vector<D3D12ShaderResourceView*> SRVList;
 	SRVList.push_back(SRV);
@@ -414,11 +414,11 @@ bool TShader::SetParameter(std::string ParamName, D3D12ShaderResourceView* SRV)
 	return SetParameter(ParamName, SRVList);
 }
 
-bool TShader::SetParameter(std::string ParamName, const std::vector<D3D12ShaderResourceView*>& SRVList)
+bool Shader::SetParameter(std::string ParamName, const std::vector<D3D12ShaderResourceView*>& SRVList)
 {
 	bool FindParam = false;
 
-	for (TShaderSRVParameter& Param : SRVParams)
+	for (ShaderSRVParameter& Param : SRVParams)
 	{
 		if (Param.Name == ParamName)
 		{
@@ -433,7 +433,7 @@ bool TShader::SetParameter(std::string ParamName, const std::vector<D3D12ShaderR
 	return FindParam;
 }
 
-bool TShader::SetParameter(std::string ParamName, D3D12UnorderedAccessView* UAV)
+bool Shader::SetParameter(std::string ParamName, D3D12UnorderedAccessView* UAV)
 {
 	std::vector<D3D12UnorderedAccessView*> UAVList;
 	UAVList.push_back(UAV);
@@ -441,11 +441,11 @@ bool TShader::SetParameter(std::string ParamName, D3D12UnorderedAccessView* UAV)
 	return SetParameter(ParamName, UAVList);
 }
 
-bool TShader::SetParameter(std::string ParamName, const std::vector<D3D12UnorderedAccessView*>& UAVList)
+bool Shader::SetParameter(std::string ParamName, const std::vector<D3D12UnorderedAccessView*>& UAVList)
 {
 	bool FindParam = false;
 
-	for (TShaderUAVParameter& Param : UAVParams)
+	for (ShaderUAVParameter& Param : UAVParams)
 	{
 		if (Param.Name == ParamName)
 		{
@@ -460,7 +460,7 @@ bool TShader::SetParameter(std::string ParamName, const std::vector<D3D12Unorder
 	return FindParam;
 }
 
-void TShader::BindParameters()
+void Shader::BindParameters()
 {
 	auto CommandList = D3D12RHI->GetDevice()->GetCommandList();
 	auto DescriptorCache = D3D12RHI->GetDevice()->GetCommandContext()->GetDescriptorCache();
@@ -492,7 +492,7 @@ void TShader::BindParameters()
 		std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> SrcDescriptors;
 		SrcDescriptors.resize(SRVCount);
 
-		for (const TShaderSRVParameter& Param : SRVParams)
+		for (const ShaderSRVParameter& Param : SRVParams)
 		{
 			for (UINT i = 0; i < Param.SRVList.size(); i++)
 			{
@@ -520,7 +520,7 @@ void TShader::BindParameters()
 		std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> SrcDescriptors;
 		SrcDescriptors.resize(UAVCount);
 
-		for (const TShaderUAVParameter& Param : UAVParams)
+		for (const ShaderUAVParameter& Param : UAVParams)
 		{
 			for (UINT i = 0; i < Param.UAVList.size(); i++)
 			{
@@ -545,37 +545,37 @@ void TShader::BindParameters()
 	ClearBindings();
 }
 
-void TShader::CheckBindings()
+void Shader::CheckBindings()
 {
-	for (TShaderCBVParameter& Param : CBVParams)
+	for (ShaderCBVParameter& Param : CBVParams)
 	{
 		assert(Param.ConstantBufferRef);
 	}
 
-	for (TShaderSRVParameter& Param : SRVParams)
+	for (ShaderSRVParameter& Param : SRVParams)
 	{
 		assert(Param.SRVList.size() > 0);
 	}
 
-	for (TShaderUAVParameter& Param : UAVParams)
+	for (ShaderUAVParameter& Param : UAVParams)
 	{
 		assert(Param.UAVList.size() > 0);
 	}
 }
 
-void TShader::ClearBindings()
+void Shader::ClearBindings()
 {
-	for (TShaderCBVParameter& Param : CBVParams)
+	for (ShaderCBVParameter& Param : CBVParams)
 	{
 		Param.ConstantBufferRef = nullptr;
 	}
 
-	for (TShaderSRVParameter& Param : SRVParams)
+	for (ShaderSRVParameter& Param : SRVParams)
 	{
 		Param.SRVList.clear();
 	}
 
-	for (TShaderUAVParameter& Param : UAVParams)
+	for (ShaderUAVParameter& Param : UAVParams)
 	{
 		Param.UAVList.clear();
 	}
