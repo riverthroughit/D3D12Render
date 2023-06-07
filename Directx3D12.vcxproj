@@ -62,10 +62,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ThirdParty\assimp\include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOLUTION_DIR=R"($(SolutionDir))";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -92,7 +96,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\D3D12\Camera.cpp" />
     <ClCompile Include="src\D3D12\D3D12Buffer.cpp" />
     <ClCompile Include="src\D3D12\D3D12CommandContext.cpp" />
     <ClCompile Include="src\D3D12\D3D12DescriptorCache.cpp" />
@@ -106,16 +109,19 @@
     <ClCompile Include="src\D3D12\D3D12View.cpp" />
     <ClCompile Include="src\D3D12\D3D12Viewport.cpp" />
     <ClCompile Include="src\D3D12\MeshGeometry.cpp" />
-    <ClCompile Include="src\D3D12\ObjectConsts.cpp" />
-    <ClCompile Include="src\D3D12\UploadBuffer.cpp" />
-    <ClCompile Include="src\D3D12\Vertex.cpp" />
     <ClCompile Include="src\File\BinaryReader.cpp" />
     <ClCompile Include="src\File\BinarySaver.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math\Math.cpp" />
     <ClCompile Include="src\Math\Transform.cpp" />
+    <ClCompile Include="src\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Mesh\MeshLoader.cpp" />
     <ClCompile Include="src\Render\D3D12App.cpp" />
     <ClCompile Include="src\Render\D3D12Render.cpp" />
+    <ClCompile Include="src\Render\InputLayout.cpp" />
+    <ClCompile Include="src\Render\PSO.cpp" />
+    <ClCompile Include="src\Render\RenderTarget.cpp" />
+    <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\shader\Shader.cpp" />
     <ClCompile Include="src\TextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="src\TextureLoader\HDRTextureLoader.cpp" />
@@ -127,7 +133,6 @@
     <QtUic Include="D3D12App.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\D3D12\Camera.h" />
     <ClInclude Include="src\D3D12\D3D12Utils.h" />
     <ClInclude Include="src\D3D12\D3D12View.h" />
     <ClInclude Include="src\File\BinaryReader.h" />
@@ -142,7 +147,13 @@
     <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Math\Vector4.h" />
     <QtMoc Include="src\Render\D3D12App.h" />
+    <ClInclude Include="src\Mesh\Mesh.h" />
+    <ClInclude Include="src\Mesh\MeshLoader.h" />
     <ClInclude Include="src\Render\D3D12Render.h" />
+    <ClInclude Include="src\Render\InputLayout.h" />
+    <ClInclude Include="src\Render\PSO.h" />
+    <ClInclude Include="src\Render\RenderTarget.h" />
+    <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\shader\Shader.h" />
     <ClInclude Include="src\TextureLoader\DDS.h" />
     <ClInclude Include="src\TextureLoader\DDSTextureLoader.h" />
@@ -168,9 +179,6 @@
     <ClInclude Include="src\D3D12\D3D12Viewport.h" />
     <ClInclude Include="src\D3D12\d3dx12.h" />
     <ClInclude Include="src\D3D12\MeshGeometry.h" />
-    <ClInclude Include="src\D3D12\ObjectConsts.h" />
-    <ClInclude Include="src\D3D12\UploadBuffer.h" />
-    <ClInclude Include="src\D3D12\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

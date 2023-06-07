@@ -4,14 +4,14 @@
 #include <crtdbg.h>
 #endif
 
-#include "D3D12/D3D12Utils.h"
 #include"Utils/GameTimer.h"
-#include"D3D12/MeshGeometry.h"
+#include"D3D12/D3D12RHI.h"
 #include"Math/Math.h"
-#include"D3D12/Camera.h"
+#include"Scene/Camera.h"
+#include"PSO.h"
+#include"RenderTarget.h"
+#include<memory>
 
-#include"D3D12/ObjectConsts.h"
-#include"D3D12/UploadBuffer.h"
 
 
 // Link necessary d3d12 libraries.
@@ -27,127 +27,73 @@ class D3D12Render
 {
 protected:
     HWND mhMainWnd;//´°¿Ú¾ä±ú
-    GameTimer gameTimer;//¼ÆÊ±Æ÷
-
-    ComPtr<IDXGIFactory4> mdxgiFactory;
-
-    ComPtr<ID3D12Device> md3dDevice;
-
-    ComPtr<ID3D12Fence> mFence;
-    UINT64 mCurrentFence = 0;
-
-    ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
-    ComPtr<ID3D12GraphicsCommandList> mCommandList;
-    ComPtr<ID3D12CommandQueue> mCommandQueue;
-
-    ComPtr<IDXGISwapChain> mSwapChain;
-    static const int SwapChainBufferCount = 2;
-    DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    int mCurrBackBuffer = 0;
-    ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
-
-    ComPtr<ID3D12Resource> mDepthStencilBuffer;
-    DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    std::unique_ptr<UploadBuffer<ObjectConsts>> mObjectCB;
-
-
+    bool beInitialized;
     int mClientWidth = 800;
     int mClientHeight = 600;
-    bool m4xMsaaState = false;
-    UINT m4xMsaaQuality = 0;
+
+    std::unique_ptr<D3D12RHI> mD3D12RHI = nullptr;
+    ID3D12Device* mD3DDevice;
+    ID3D12GraphicsCommandList* mCommandList;
+
+    InputLayoutManager mInputLayoutManager;
+
+    std::unique_ptr<GraphicsPSOManager> mGraphicsPSOManager;
+    GraphicsPSODescriptor mDeferredLightingPSODescriptor;
 
 
-    ComPtr<ID3D12DescriptorHeap> mRtvHeap;
-    ComPtr<ID3D12DescriptorHeap> mDsvHeap;
-    ComPtr<ID3D12DescriptorHeap> mCbvHeap;
 
-    D3D12_VIEWPORT mScreenViewport;
-    D3D12_RECT mScissorRect;
+    std::unique_ptr<Shader> mDeferredLightingShader = nullptr;
 
-    UINT mRtvDescriptorSize = 0;
-    UINT mDsvDescriptorSize = 0;
-    UINT mCbvSrvUavDescriptorSize = 0;
 
     Camera mCamera;
 
-    DirectX::XMFLOAT4X4 mWorld = MyMath::identity4x4();
-    DirectX::XMFLOAT4X4 mView = MyMath::identity4x4();
-    DirectX::XMFLOAT4X4 mProj = MyMath::identity4x4();
+    const int mGBufferCount = 3;
+    std::unique_ptr<RenderTarget2D> mGBufferBaseColor;
+    std::unique_ptr<RenderTarget2D> mGBufferNormal;
+    std::unique_ptr<RenderTarget2D> mGBufferWorldPos;
 
-    ComPtr<ID3D12RootSignature> mRootSignature;
+    std::unique_ptr<RenderTarget2D> mBackDepth = nullptr;
 
-    ComPtr<ID3DBlob> mvsByteCode = nullptr;
-    ComPtr<ID3DBlob> mpsByteCode = nullptr;
+    D3D12TextureRef mColorTexture = nullptr;
+    D3D12TextureRef mCacheColorTexture = nullptr;
+    D3D12TextureRef mPrevColorTexture = nullptr;
 
-    std::unique_ptr<MeshGeometry> mMeshGeo = nullptr;
-
-    std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
-
-    ComPtr<ID3D12PipelineState> mPSO = nullptr;
-
-
+    std::unique_ptr<D3D12ShaderResourceView> mTexture3DNullDescriptor = nullptr;
+    std::unique_ptr<D3D12ShaderResourceView> mTexture2DNullDescriptor = nullptr;
+    std::unique_ptr<D3D12ShaderResourceView> mTextureCubeNullDescriptor = nullptr;
+    std::unique_ptr<D3D12ShaderResourceView> mStructuredBufferNullDescriptor = nullptr;
 
 public:
     D3D12Render(HWND wid,int width = 800,int height = 600) 
-        :mhMainWnd(wid), mClientWidth(width), mClientHeight(height) {
+        :mhMainWnd(wid), beInitialized(false), mClientWidth(width), mClientHeight(height) {
 
     }
 protected:
 
-    void enableDebug();
-    bool initDirect3D();
-    void createDevice();
-    void checkSupport();
-    void checkMSAA();
-    void checkTearing();
-    void getDescriptorSize();
-
-    void createCommandObjects();
-    void createFence();
-    void flushCommandQueue();
-
-    ID3D12Resource* currentBackBuffer()const;
-    void updateCurrBackBuffer();
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView()const;
-    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView()const;
-    D3D12_CPU_DESCRIPTOR_HANDLE constBufferView()const;
-    
-    void createSwapChain();
-    void resizeSwapChain();
-
-    virtual void createDescriptorHeaps();
-    void createRtvHeap();
-    void createDsvHeap();
-    void createCbvHeap();
-
-    void createDescriptor();
-    void createRtvDescriptor();
-    void createDsvDescriptor();
-    void createCbvDescriptor();
-
-    Microsoft::WRL::ComPtr<ID3D12Resource> createDefaultBufferFrom(
-        const void* initData,
-        UINT64 byteSize,
-        Microsoft::WRL::ComPtr<ID3D12Resource>& uploadBuffer);
-   
-
-    void setViewPort();
-    void setScissorRect();
-
-    void executeCommand();
-
-    void createRootSignature();
-    void createShadersAndInputLayout();
-    void createMeshGeometry();
-    void createPSO();
-
-    virtual void onResize();
+    bool initialize();
+    virtual void onResize(int width,int height);
     virtual void updateData();
     virtual void draw();
     
+    bool isInitialize() {
+        return beInitialized;
+    }
+
     float getAspectRatio()const;
-    void updateProjMatrix();
-    void updateMVP();
+    //void updateProjMatrix();
+    //void updateMVP();
+    
+private:
+    void createRenderResource();
+    
+    void createGBuffers();
+    void createBackDepth();
+    void createColorTextures();
+
+    void createNullDescriptors();
+    void createMesh();
+    void createInputLayouts();
+    void createGlobalShaders();
+    void createGlobalPSO();
 };
 
