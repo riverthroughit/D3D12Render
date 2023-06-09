@@ -49,6 +49,7 @@ private:
 
 	uint32_t AllocateBlock(uint32_t Order);
 
+	//防止加上偏移量后显存大小不够
 	uint32_t GetSizeToAllocate(uint32_t Size, uint32_t Alignment);
 
 	bool CanAllocate(uint32_t SizeToAllocate);
@@ -61,6 +62,7 @@ private:
 	uint32_t UnitSizeToOrder(uint32_t Size) const
 	{
 		unsigned long Result;
+		//最高位的1对应的数字
 		_BitScanReverse(&Result, Size + Size - 1); // ceil(log2(size))
 		return Result;
 	}
@@ -90,6 +92,7 @@ private:
 
 	uint32_t TotalAllocSize = 0;
 
+	//对应阶数的显存块的起始位置
 	std::vector<std::set<uint32_t>> FreeBlocks;
 
 	std::vector<D3D12BuddyBlockData> DeferredDeletionQueue;

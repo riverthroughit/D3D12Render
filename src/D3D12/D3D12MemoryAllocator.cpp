@@ -376,6 +376,8 @@ void D3D12DefaultBufferAllocator::AllocDefaultResource(const D3D12_RESOURCE_DESC
 void D3D12DefaultBufferAllocator::CleanUpAllocations()
 {
 	Allocator->CleanUpAllocations();
+
+	//?UavAllocator
 }
 
 
